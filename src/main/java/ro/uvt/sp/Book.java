@@ -1,41 +1,72 @@
 package ro.uvt.sp;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Book {
+public class Book extends Element{
+    private final Collection<Author> authors = new LinkedList<>();
+    private final List<Chapter> chapters = new ArrayList<>();
+    private final List<Element> elements = new ArrayList<>();
     private final String title;
-    private final List<String> paragraphs = new ArrayList<>();
-    private final List<String> images = new ArrayList<>();
-    private final List<String> tables = new ArrayList<>();
+    private final TableOfContents contents;
 
     public Book(String title){
         this.title = title;
+        this.contents = new TableOfContents(chapters);
     }
 
-    public void createNewParagraph(String paragraph){
-        paragraphs.add(paragraph);
+    public void addAuthor(Author author){
+        authors.add(author);
     }
 
-    public void createNewImage(String image){
-        images.add(image);
+    public void removeAuthor(Author author){
+        authors.remove(author);
     }
 
-    public void createNewTable(String table){
-        tables.add(table);
+    public Collection<Author> getAuthors(){
+        return authors;
+    }
+
+    public void addContent(Element element){
+        elements.add(element);
+    }
+
+    public int createChapter(String cTitle){
+        Chapter chapter = new Chapter(cTitle);
+        chapters.add(chapter);
+        int index = chapters.indexOf(chapter);
+        contents.addContent(index, chapter);
+        return index;
+    }
+
+    public Chapter getChapter(int index){
+        return chapters.get(index);
     }
 
     public void print(){
         System.out.println(this);
+
+        for(Element element: elements){
+            element.print();
+        }
+    }
+
+    @Override
+    public void setParent(Element element) {
+
+    }
+
+    @Override
+    public Element getParent() {
+        return null;
     }
 
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + title + '\'' +
-                ", paragraphs=" + paragraphs +
-                ", images=" + images +
-                ", tables=" + tables +
-                '}';
+                "title = " + title + '\n' +
+                "authors=" + authors + '\n';
     }
 }
